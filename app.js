@@ -7,6 +7,9 @@ const cookieParser = require("cookie-parser");
 
 // internal imports
 const { notFoundHandler, errorHandler } = require("./middlewares/common/errorHandler");
+const loginRoutes = require("./routes/loginRoutes");
+const inboxRoutes = require("./routes/inboxRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 dotenv.config();
@@ -35,6 +38,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // set routes
+app.use("/", loginRoutes);
+app.use("/inbox", inboxRoutes);
+app.use("/users", userRoutes);
 
 // 404 not found handler
 app.use(notFoundHandler);
