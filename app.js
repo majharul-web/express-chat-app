@@ -4,27 +4,29 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const loginRouter = require("./router/loginRouter");
+const usersRouter = require("./router/usersRouter");
+const inboxRouter = require("./router/inboxRouter");
 
 // internal imports
-const { notFoundHandler, errorHandler } = require("./middlewares/common/errorHandler");
-const loginRoutes = require("./routes/loginRoutes");
-const inboxRoutes = require("./routes/inboxRoutes");
-const userRoutes = require("./routes/userRoutes");
+const {
+  notFoundHandler,
+  errorHandler,
+} = require("./middlewares/common/errorHandler");
 
 const app = express();
 dotenv.config();
 
 // database connection
 mongoose
-  .connect(process.env.MONGO_CONNECTION_STRING)
-  .then(() => {
-    console.log("Database connection successful");
+  .connect(process.env.MONGO_CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
-  .catch((err) => {
-    console.log(err);
-  });
+  .then(() => console.log("database connection successful!"))
+  .catch((err) => console.log(err));
 
-// request parser
+// request parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -37,17 +39,17 @@ app.use(express.static(path.join(__dirname, "public")));
 // parse cookies
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-// set routes
-app.use("/", loginRoutes);
-app.use("/inbox", inboxRoutes);
-app.use("/users", userRoutes);
+// routing setup
+app.use("/", loginRouter);
+app.use("/users", usersRouter);
+app.use("/inbox", inboxRouter);
 
 // 404 not found handler
 app.use(notFoundHandler);
 
-// error handler
+// common error handler
 app.use(errorHandler);
 
 app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+  console.log(`app listening to port ${process.env.PORT}`);
 });

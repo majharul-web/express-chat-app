@@ -5,7 +5,7 @@ const path = require("path");
 const { unlink } = require("fs");
 
 // internal imports
-const User = require("../../model/People");
+const User = require("../../models/People");
 
 // add user
 const addUserValidators = [
@@ -60,9 +60,12 @@ const addUserValidationHandler = function (req, res, next) {
     // remove uploaded files
     if (req.files.length > 0) {
       const { filename } = req.files[0];
-      unlink(path.join(__dirname, `/../public/uploads/avatars/${filename}`), (err) => {
-        if (err) console.log(err);
-      });
+      unlink(
+        path.join(__dirname, `/../public/uploads/avatars/${filename}`),
+        (err) => {
+          if (err) console.log(err);
+        }
+      );
     }
 
     // response the errors

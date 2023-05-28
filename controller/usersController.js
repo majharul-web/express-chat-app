@@ -4,7 +4,7 @@ const { unlink } = require("fs");
 const path = require("path");
 
 // internal imports
-const User = require("../model/People");
+const User = require("../models/People");
 
 // get users page
 async function getUsers(req, res, next) {
@@ -62,9 +62,12 @@ async function removeUser(req, res, next) {
 
     // remove user avatar if any
     if (user.avatar) {
-      unlink(path.join(__dirname, `/../public/uploads/avatars/${user.avatar}`), (err) => {
-        if (err) console.log(err);
-      });
+      unlink(
+        path.join(__dirname, `/../public/uploads/avatars/${user.avatar}`),
+        (err) => {
+          if (err) console.log(err);
+        }
+      );
     }
 
     res.status(200).json({
